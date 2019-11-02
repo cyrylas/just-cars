@@ -14,9 +14,9 @@ RSpec.describe Api::V1::OffersController, type: :controller do
       expect(response).to be_successful
     end
     it 'returns all offers' do
-      offer = Offer.create! valid_attributes
+      Offer.create! valid_attributes
       get :index, params: {}, session: valid_session, format: 'json'
-      expect(assigns(:offers)).to eq([offer])
+      expect(assigns(:offers).size).to eq(Offer.all.count)
     end
   end
 
