@@ -28,6 +28,9 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
+# idea config directory
+/.idea
+
 /public/packs
 /public/packs-test
 /node_modules
