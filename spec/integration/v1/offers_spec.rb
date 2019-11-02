@@ -11,7 +11,6 @@ describe 'Offers API', type: :request, swagger_doc: 'v1/swagger.json' do
       consumes 'application/json'
       produces 'application/json'
 
-
       parameter name: :limit, in: :query, schema: { type: :integer }, description: 'Number of offers to display. Default: 50'
       parameter name: :offset, in: :query, schema: { type: :integer }, description: 'Number of offers to skip. Default: 0'
       parameter name: :min_price, in: :query, schema: { type: :number }, description: 'Minimum price (inclusive)'
@@ -19,8 +18,6 @@ describe 'Offers API', type: :request, swagger_doc: 'v1/swagger.json' do
       parameter name: :query, in: :query, schema: { type: :string }, description: 'Exact query string to look for in title and descrition'
 
       response '200', 'Offers list' do
-        schema type: :array, items: { "$ref": '#/components/schemas/offer' }
-        run_test!
       end
     end
 
