@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 2019_11_02_124129) do
   create_table "offers", force: :cascade do |t|
     t.string "title", null: false
     t.text "description"
-    t.decimal "price", null: false
+    t.decimal "price", precision: 8, scale: 2, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["created_at"], name: "index_offers_on_created_at"

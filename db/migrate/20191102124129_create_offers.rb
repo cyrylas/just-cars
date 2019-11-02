@@ -3,7 +3,7 @@ class CreateOffers < ActiveRecord::Migration[6.0]
     create_table :offers do |t|
       t.string :title,    null: false
       t.text :description
-      t.decimal :price,   null: false
+      t.decimal :price,   null: false, precision: 8, scale: 2
 
       t.timestamps
     end
