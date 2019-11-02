@@ -18,6 +18,11 @@ RSpec.describe Api::V1::OffersController, type: :controller do
       get :index, params: {}, session: valid_session, format: 'json'
       expect(assigns(:offers).size).to eq(Offer.all.count)
     end
+    it 'returns newest offer first' do
+      offers = FactoryBot.create_list(:offer, 10)
+      get :index, params: {}, session: valid_session, format: 'json'
+      expect(assigns(:offers).first).to eq(offers.last)
+    end
   end
 
   describe 'GET #show' do

@@ -5,7 +5,7 @@ class Api::V1::OffersController < ApplicationController
 
   # GET /offers
   def index
-    @offers = Offer.all
+    @offers = Offer.all.order(created_at: :desc)
   end
 
   # GET /offers/1
