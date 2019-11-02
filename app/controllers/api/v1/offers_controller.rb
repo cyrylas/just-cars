@@ -1,11 +1,18 @@
-# frozen_string_literal: true"
+# frozen_string_literal: true
 
 class Api::V1::OffersController < ApplicationController
   before_action :set_offer, only: %i[show update destroy]
 
   # GET /offers
+  # Params:
+  #   - limit: (default: 50) Number of offers to display
+  #   - offset: (default: 0) Number of offers to skip first
+  # Why offset instead of commonly used page?
+  # When changing number of items displayed on page you can still get right starting offer on page.
   def index
-    @offers = Offer.all.order(created_at: :desc)
+    limit = params[:limit].to_i || 50
+    offset = params[:offset].to_i || 0
+    @offers = Offer.all.order(created_at: :desc).limit(limit).offset(offset)
   end
 
   # GET /offers/1

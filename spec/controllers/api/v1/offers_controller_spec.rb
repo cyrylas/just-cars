@@ -13,15 +13,23 @@ RSpec.describe Api::V1::OffersController, type: :controller do
       get :index, params: {}, session: valid_session, format: 'json'
       expect(response).to be_successful
     end
-    it 'returns all offers' do
-      Offer.create! valid_attributes
-      get :index, params: {}, session: valid_session, format: 'json'
-      expect(assigns(:offers).size).to eq(Offer.all.count)
-    end
     it 'returns newest offer first' do
       offers = FactoryBot.create_list(:offer, 10)
       get :index, params: {}, session: valid_session, format: 'json'
       expect(assigns(:offers).first).to eq(offers.last)
+    end
+    describe 'limit and offset parameter' do
+      it 'limit offers' do
+        FactoryBot.create_list(:offer, 10)
+        get :index, params: { limit: 5 }, session: valid_session, format: 'json'
+        expect(assigns(:offers).size).to eq(5)
+      end
+      it 'limit offers and skip 5' do
+        offers = FactoryBot.create_list(:offer, 10)
+        # we should get offers id 6 to id 2 (as from newest to oldest)
+        get :index, params: { limit: 5, offset: 4 }, session: valid_session, format: 'json'
+        expect(assigns(:offers).first).to eq(offers[5]) # id 6 is 5th element
+      end
     end
   end
 
