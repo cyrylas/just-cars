@@ -19,7 +19,10 @@ class Api::V1::OffersController < ApplicationController
     @offers = Offer.all.order(created_at: :desc).limit(limit).offset(offset)
     @offers.where!('price >= ?', params[:min_price].to_f) if params[:min_price]&.match? /\A\d+(\.\d+)?\Z/
     @offers.where!('price <= ?', params[:max_price].to_f) if params[:max_price]&.match? /\A\d+(\.\d+)?\Z/
-    @offers.where!('title LIKE ? OR description LIKE ?', params[:query], params[:query]) if params[:query]
+    if params[:query]
+      q = "%#{params[:query]}%"
+      @offers.where!('title LIKE ? OR description LIKE ?', q, q)
+    end
   end
 
   # GET /offers/1
