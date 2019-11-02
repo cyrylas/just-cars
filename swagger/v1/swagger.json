@@ -11,6 +11,48 @@
         "tags": [
           "Offers"
         ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Number of offers to display. Default: 50"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Number of offers to skip. Default: 0"
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Minimum price (inclusive)"
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Maximum price (inclusive)"
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact query string to look for in title and descrition"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Offers list",
