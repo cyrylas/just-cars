@@ -36,7 +36,9 @@ group :development, :test do
 
   gem 'factory_bot_rails'
   gem 'faker'
-  gem 'rspec-rails'
+  gem 'rails-controller-testing'
+  # Rails 6 requires rspec 4
+  gem 'rspec-rails', '>= 4.0.0.beta3'
   gem 'rubocop'
   gem 'simplecov'
 end
