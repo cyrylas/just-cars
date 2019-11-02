@@ -49,6 +49,16 @@ RSpec.describe Api::V1::OffersController, type: :controller do
         expect(response).to have_http_status(:created)
       end
     end
+    describe 'with attachment' do
+      it 'saves attachment' do
+        pictures = Dir.glob(Rails.root.join('spec/factories/pictures/*.jpg'))
+        create_attributes = valid_attributes.merge(
+          picture: Rack::Test::UploadedFile.new(pictures.sample, 'image/jpeg')
+        )
+        post :create, params: { offer: create_attributes }, session: valid_session, format: 'json'
+        expect(Offer.last.picture.attached?).to be_truthy
+      end
+    end
 
     context 'with invalid params' do
       it 'does not create offer' do
