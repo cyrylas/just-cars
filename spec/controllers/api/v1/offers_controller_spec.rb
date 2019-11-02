@@ -36,6 +36,25 @@ RSpec.describe Api::V1::OffersController, type: :controller do
         expect(assigns(:offers).first).to eq(offers[5]) # id 6 is 5th element
       end
     end
+    describe 'min and max price' do
+      before do
+        FactoryBot.create(:offer, price: 1000.00)
+        FactoryBot.create(:offer, price: 2000.00)
+        FactoryBot.create(:offer, price: 3000.33)
+      end
+      it 'limits max price' do
+        get :index, params: { max_price: 3000.30 }, session: valid_session, format: 'json'
+        expect(assigns(:offers).size).to eq(2)
+      end
+      it 'limits min price' do
+        get :index, params: { min_price: 2000 }, session: valid_session, format: 'json'
+        expect(assigns(:offers).count).to eq(2)
+      end
+      it 'limits both min and max price' do
+        get :index, params: { min_price: 2000, max_price: 3000 }, session: valid_session, format: 'json'
+        expect(assigns(:offers).count).to eq(1)
+      end
+    end
   end
 
   describe 'GET #show' do
