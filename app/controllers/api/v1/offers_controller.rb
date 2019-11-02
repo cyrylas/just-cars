@@ -11,12 +11,15 @@ class Api::V1::OffersController < ApplicationController
   #     When changing number of items displayed on page you can still get right starting offer on page.
   #   - min_price: (default: any) minimum price inclusive
   #   - max_price: (default: any) maximum price inclusive
+  #   - query: text (exact) to search in title and description
+  #     Please note, this is ineffective and should be used with caution
   def index
     limit = params[:limit].to_i.positive? ? params[:limit].to_i : 50
     offset = params[:offset].to_i.positive? ? params[:offset].to_i : 0
     @offers = Offer.all.order(created_at: :desc).limit(limit).offset(offset)
     @offers.where!('price >= ?', params[:min_price].to_f) if params[:min_price]&.match? /\A\d+(\.\d+)?\Z/
     @offers.where!('price <= ?', params[:max_price].to_f) if params[:max_price]&.match? /\A\d+(\.\d+)?\Z/
+    @offers.where!('title LIKE ? OR description LIKE ?', params[:query], params[:query]) if params[:query]
   end
 
   # GET /offers/1

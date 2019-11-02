@@ -55,6 +55,21 @@ RSpec.describe Api::V1::OffersController, type: :controller do
         expect(assigns(:offers).count).to eq(1)
       end
     end
+    describe 'query text' do
+      before do
+        FactoryBot.create(:offer, title: 'Example text to search')
+        FactoryBot.create(:offer, description: 'Example text to search in description')
+        FactoryBot.create(:offer)
+      end
+      it 'search in title and description case insensitive' do
+        get :index, params: { query: 'example text' }, session: valid_session, format: 'json'
+        expect(assigns(:offers).size).to eq(2)
+      end
+      it 'escapes characters' do
+        get :index, params: { query: "\"' OR 1=1 -- " }, session: valid_session, format: 'json'
+        expect(assigns(:offers).count).to eq(0)
+      end
+    end
   end
 
   describe 'GET #show' do
