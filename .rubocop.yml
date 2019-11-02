@@ -31,3 +31,6 @@ Metrics/LineLength:
   URISchemes:
     - http
     - https
+
+Style/Documentation:
+  Enabled: false
