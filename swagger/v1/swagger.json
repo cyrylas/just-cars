@@ -1,0 +1,274 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API V1",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/v1/offers": {
+      "get": {
+        "summary": "List all offers",
+        "tags": [
+          "Offers"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Number of offers to display. Default: 50"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Number of offers to skip. Default: 0"
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Minimum price (inclusive)"
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Maximum price (inclusive)"
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact query string to look for in title and descrition"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Offers list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/offer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Creates an offer",
+        "tags": [
+          "Offers"
+        ],
+        "description": "# There's some issues with rails 6 and rswag regarding file upload.\nTo properly test this action please use command line.\n\nFor example:\n```\ncurl -X POST \"http://localhost:3000/api/v1/offers\" -F \"offer[title]=title\" -F \"offer[description]=my description\" -F \"offer[price]=123.45\" -F \"offer[picture]=@spec/factories/pictures/1971_Buick_Estate_wagon_rear.jpg\"\n````\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "name": "offer",
+                "properties": {
+                  "offer": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "price": {
+                        "type": "number"
+                      },
+                      "picture": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "title",
+                      "price"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+
+        ],
+        "responses": {
+          "201": {
+            "description": "offer created"
+          }
+        }
+      }
+    },
+    "/api/v1/offers/{id}": {
+      "get": {
+        "summary": "Retrieves offer details",
+        "tags": [
+          "Offers"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Offer details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/offer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update offer",
+        "tags": [
+          "Offers"
+        ],
+        "description": "# There's some issues with rails 6 and rswag regarding file upload.\nTo properly test this action please use command line.\n\nFor example:\n```\ncurl -X PATCH \"http://localhost:3000/api/v1/offers/:id\" -F \"offer[title]=title\" -F \"offer[description]=my description\" -F \"offer[price]=123.45\" -F \"offer[picture]=@spec/factories/pictures/1971_Buick_Estate_wagon_rear.jpg\"\n````\n",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "offer": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "price": {
+                        "type": "number"
+                      },
+                      "picture": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "brand updated"
+          },
+          "422": {
+            "description": "invalid request"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete offer",
+        "tags": [
+          "Offers"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "offer deleted"
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "offer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "picture": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "thumb": {
+                "type": "string"
+              },
+              "original": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
