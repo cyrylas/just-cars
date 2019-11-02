@@ -13,10 +13,62 @@ RSpec.describe Api::V1::OffersController, type: :controller do
       get :index, params: {}, session: valid_session, format: 'json'
       expect(response).to be_successful
     end
-    it 'returns all offers' do
-      Offer.create! valid_attributes
+    it 'returns newest offer first' do
+      offers = FactoryBot.create_list(:offer, 10)
       get :index, params: {}, session: valid_session, format: 'json'
-      expect(assigns(:offers).size).to eq(Offer.all.count)
+      expect(assigns(:offers).first).to eq(offers.last)
+    end
+    describe 'limit and offset parameter' do
+      it 'default to 50 offers' do
+        FactoryBot.create_list(:offer, 60)
+        get :index, params: {}, session: valid_session, format: 'json'
+        expect(assigns(:offers).size).to eq(50)
+      end
+      it 'limit offers' do
+        FactoryBot.create_list(:offer, 10)
+        get :index, params: { limit: 5 }, session: valid_session, format: 'json'
+        expect(assigns(:offers).size).to eq(5)
+      end
+      it 'limit offers and skip 5' do
+        offers = FactoryBot.create_list(:offer, 10)
+        # we should get offers id 6 to id 2 (as from newest to oldest)
+        get :index, params: { limit: 5, offset: 4 }, session: valid_session, format: 'json'
+        expect(assigns(:offers).first).to eq(offers[5]) # id 6 is 5th element
+      end
+    end
+    describe 'min and max price' do
+      before do
+        FactoryBot.create(:offer, price: 1000.00)
+        FactoryBot.create(:offer, price: 2000.00)
+        FactoryBot.create(:offer, price: 3000.33)
+      end
+      it 'limits max price' do
+        get :index, params: { max_price: 3000.30 }, session: valid_session, format: 'json'
+        expect(assigns(:offers).size).to eq(2)
+      end
+      it 'limits min price' do
+        get :index, params: { min_price: 2000 }, session: valid_session, format: 'json'
+        expect(assigns(:offers).count).to eq(2)
+      end
+      it 'limits both min and max price' do
+        get :index, params: { min_price: 2000, max_price: 3000 }, session: valid_session, format: 'json'
+        expect(assigns(:offers).count).to eq(1)
+      end
+    end
+    describe 'query text' do
+      before do
+        FactoryBot.create(:offer, title: 'Example text to search')
+        FactoryBot.create(:offer, description: 'Example text to search in description')
+        FactoryBot.create(:offer)
+      end
+      it 'search in title and description case insensitive' do
+        get :index, params: { query: 'example text' }, session: valid_session, format: 'json'
+        expect(assigns(:offers).size).to eq(2)
+      end
+      it 'escapes characters' do
+        get :index, params: { query: "\"' OR 1=1 -- " }, session: valid_session, format: 'json'
+        expect(assigns(:offers).count).to eq(0)
+      end
     end
   end
 

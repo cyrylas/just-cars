@@ -1,11 +1,28 @@
-# frozen_string_literal: true"
+# frozen_string_literal: true
 
 class Api::V1::OffersController < ApplicationController
   before_action :set_offer, only: %i[show update destroy]
 
   # GET /offers
+  # Params:
+  #   - limit: (default: 50) Number of offers to display
+  #   - offset: (default: 0) Number of offers to skip first
+  #     Why offset instead of commonly used page number?
+  #     When changing number of items displayed on page you can still get right starting offer on page.
+  #   - min_price: (default: any) minimum price inclusive
+  #   - max_price: (default: any) maximum price inclusive
+  #   - query: text (exact) to search in title and description
+  #     Please note, this is ineffective and should be used with caution
   def index
-    @offers = Offer.all
+    limit = params[:limit].to_i.positive? ? params[:limit].to_i : 50
+    offset = params[:offset].to_i.positive? ? params[:offset].to_i : 0
+    @offers = Offer.all.order(created_at: :desc).limit(limit).offset(offset)
+    @offers.where!('price >= ?', params[:min_price].to_f) if params[:min_price]&.match? /\A\d+(\.\d+)?\Z/
+    @offers.where!('price <= ?', params[:max_price].to_f) if params[:max_price]&.match? /\A\d+(\.\d+)?\Z/
+    if params[:query]
+      q = "%#{params[:query]}%"
+      @offers.where!('title LIKE ? OR description LIKE ?', q, q)
+    end
   end
 
   # GET /offers/1
