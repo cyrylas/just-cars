@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Offer < ApplicationRecord
+  has_one_attached :picture
 
   validates :title, length: { minimum: 3, maximum: 100 }
   validates :description, length: { maximum: 3_000 }
