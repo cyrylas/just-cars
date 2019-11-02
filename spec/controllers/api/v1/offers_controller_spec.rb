@@ -19,6 +19,11 @@ RSpec.describe Api::V1::OffersController, type: :controller do
       expect(assigns(:offers).first).to eq(offers.last)
     end
     describe 'limit and offset parameter' do
+      it 'default to 50 offers' do
+        FactoryBot.create_list(:offer, 60)
+        get :index, params: {}, session: valid_session, format: 'json'
+        expect(assigns(:offers).size).to eq(50)
+      end
       it 'limit offers' do
         FactoryBot.create_list(:offer, 10)
         get :index, params: { limit: 5 }, session: valid_session, format: 'json'

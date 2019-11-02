@@ -10,8 +10,8 @@ class Api::V1::OffersController < ApplicationController
   # Why offset instead of commonly used page?
   # When changing number of items displayed on page you can still get right starting offer on page.
   def index
-    limit = params[:limit].to_i || 50
-    offset = params[:offset].to_i || 0
+    limit = params[:limit].to_i.positive? ? params[:limit].to_i : 50
+    offset = params[:offset].to_i.positive? ? params[:offset].to_i : 0
     @offers = Offer.all.order(created_at: :desc).limit(limit).offset(offset)
   end
 
