@@ -7,9 +7,20 @@ Rails.application.routes.draw do
   # API
   namespace :api, defaults: { format: 'json' } do
     # Available since: 2019-11-02
-    # Deprecated at: -
+    # Deprecated at: 2019-11-03
     # End of live: -
     namespace :v1 do
+      resources :offers, only: %i[index show create update destroy]
+
+      # JWT routes
+      post 'auth' => 'auth#login'
+      post 'auth/refresh' => 'auth#refresh'
+    end
+
+    # Available since: 2019-11-03
+    # Deprecated at: -
+    # End of live: -
+    namespace :v2 do
       resources :offers, only: %i[index show create update destroy]
 
       # JWT routes

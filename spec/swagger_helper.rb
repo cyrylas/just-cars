@@ -14,13 +14,43 @@ RSpec.configure do |config|
   # By default, the operations defined in spec files are added to the first
   # document below. You can override this behavior by adding a swagger_doc tag to the
   # the root example_group in your specs, e.g. describe '...', swagger_doc: 'v2/swagger.json'
+
+  # TODO: extract to separate files if it grows
+  scheme_offer = {
+    type: 'object',
+    properties: {
+      id: { type: 'number' },
+      title: { type: 'string' },
+      description: { type: 'string' },
+      price: { type: 'number' },
+      picture: {
+        type: 'object',
+        nullable: true,
+        properties: {
+          thumb: { type: 'string' },
+          original: { type: 'string' }
+        }
+      },
+      created_at: { type: 'string', format: 'datetime' },
+      updated_at: { type: 'string', format: 'datetime' }
+    }
+  }
+  scheme_user = {
+    type: 'object',
+    properties: {
+      id: { type: 'integer' },
+      name: { type: 'string' },
+      email: { type: 'string' },
+      is_active: { type: 'boolean' },
+      created_at: { type: 'string', format: 'datetime' },
+      updated_at: { type: 'string', format: 'datetime' }
+    }
+  }
+
   config.swagger_docs = {
     'v1/swagger.json' => {
       openapi: '3.0.0',
-      info: {
-        title: 'API V1',
-        version: 'v1'
-      },
+      info: { title: 'API V1', version: 'v1' },
       paths: {},
       servers: [{ url: 'http://localhost:3000' }],
       security: [
@@ -35,36 +65,30 @@ RSpec.configure do |config|
           }
         },
         schemas: {
-          offer: {
-            type: 'object',
-            properties: {
-              id: { type: 'number' },
-              title: { type: 'string' },
-              description: { type: 'string' },
-              price: { type: 'number' },
-              picture: {
-                type: 'object',
-                nullable: true,
-                properties: {
-                  thumb: { type: 'string' },
-                  original: { type: 'string' }
-                }
-              },
-              created_at: { type: 'string', format: 'datetime' },
-              updated_at: { type: 'string', format: 'datetime' }
-            }
-          },
-          user: {
-            type: 'object',
-            properties: {
-              id: { type: 'integer' },
-              name: { type: 'string' },
-              email: { type: 'string' },
-              is_active: { type: 'boolean' },
-              created_at: { type: 'string', format: 'datetime' },
-              updated_at: { type: 'string', format: 'datetime' }
-            }
+          offer: scheme_offer,
+          user: scheme_user
+        }
+      }
+    },
+    'v2/swagger.json' => {
+      openapi: '3.0.0',
+      info: { title: 'API V2', version: 'v2' },
+      paths: {},
+      servers: [{ url: 'http://localhost:3000' }],
+      security: [
+        bearerAuth: []
+      ],
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT'
           }
+        },
+        schemas: {
+          offer: scheme_offer,
+          user: scheme_user
         }
       }
     }
