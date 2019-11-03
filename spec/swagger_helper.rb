@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.configure do |config|
@@ -48,8 +46,8 @@ RSpec.configure do |config|
   }
 
   config.swagger_docs = {
-    'v1/swagger.json' => {
-      openapi: '3.0.0',
+    'v1/swagger.yaml' => {
+      swagger: '2.0',
       info: { title: 'API V1', version: 'v1' },
       paths: {},
       servers: [{ url: 'http://localhost:3000' }],
@@ -64,14 +62,14 @@ RSpec.configure do |config|
             bearerFormat: 'JWT'
           }
         },
-        schemas: {
-          offer: scheme_offer,
-          user: scheme_user
-        }
+      },
+      definitions: {
+        offer: scheme_offer,
+        user: scheme_user
       }
     },
-    'v2/swagger.json' => {
-      openapi: '3.0.0',
+    'v2/swagger.yaml' => {
+      swagger: '2.0',
       info: { title: 'API V2', version: 'v2' },
       paths: {},
       servers: [{ url: 'http://localhost:3000' }],
@@ -86,10 +84,10 @@ RSpec.configure do |config|
             bearerFormat: 'JWT'
           }
         },
-        schemas: {
-          offer: scheme_offer,
-          user: scheme_user
-        }
+      },
+      definitions: {
+        offer: scheme_offer,
+        user: scheme_user
       }
     }
   }
