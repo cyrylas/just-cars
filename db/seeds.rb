@@ -8,4 +8,6 @@
 
 unless Rails.env.test?
   FactoryBot.create_list(:offer, 100)
+
+  FactoryBot.create(:user, email: 'admin@example.org', password: 'password')
 end

@@ -23,7 +23,17 @@ RSpec.configure do |config|
       },
       paths: {},
       servers: [{ url: 'http://localhost:3000' }],
+      security: [
+        bearerAuth: []
+      ],
       components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT'
+          }
+        },
         schemas: {
           offer: {
             type: 'object',
@@ -39,7 +49,20 @@ RSpec.configure do |config|
                   thumb: { type: 'string' },
                   original: { type: 'string' }
                 }
-              }
+              },
+              created_at: { type: 'string', format: 'datetime' },
+              updated_at: { type: 'string', format: 'datetime' }
+            }
+          },
+          user: {
+            type: 'object',
+            properties: {
+              id: { type: 'integer' },
+              name: { type: 'string' },
+              email: { type: 'string' },
+              is_active: { type: 'boolean' },
+              created_at: { type: 'string', format: 'datetime' },
+              updated_at: { type: 'string', format: 'datetime' }
             }
           }
         }

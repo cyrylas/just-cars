@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::OffersController < ApplicationController
+  before_action :authorize_request, only: %i[create update destroy]
   before_action :set_offer, only: %i[show update destroy]
 
   # GET /offers

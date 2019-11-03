@@ -8,6 +8,7 @@ describe 'Offers API', type: :request, swagger_doc: 'v1/swagger.json' do
   path '/api/v1/offers' do
     get 'List all offers' do
       tags TAG_NAME
+      security []
       consumes 'application/json'
       produces 'application/json'
 
@@ -71,6 +72,7 @@ describe 'Offers API', type: :request, swagger_doc: 'v1/swagger.json' do
   path '/api/v1/offers/{id}' do
     get 'Retrieves offer details' do
       tags TAG_NAME
+      security []
       consumes 'application/json'
       produces 'application/json'
       parameter name: :id, in: :path, type: :string
