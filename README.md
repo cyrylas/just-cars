@@ -1,24 +1,25 @@
-# README
+# How to install
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Install dependencies
 
-Things you may want to cover:
+```bash
+bundle install
+```
 
-* Ruby version
+Seed database
 
-* System dependencies
+```bash
+bin/rails db:setup
+```
 
-* Configuration
+This will create sample offers and test user.
+You can log in with:
+```
+email: admin@example.org
+password: password
+```
 
-* Database creation
+# Docs
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Documentation is available at:
+http://localhost:3000/api-docs
