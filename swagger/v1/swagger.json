@@ -5,70 +5,111 @@
     "version": "v1"
   },
   "paths": {
-    "/api/v1/offers": {
-      "get": {
-        "summary": "List all offers",
+    "/api/v1/auth": {
+      "post": {
+        "summary": "Get token",
         "tags": [
-          "Offers"
+          "Auth"
         ],
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "schema": {
-              "type": "integer"
-            },
-            "description": "Number of offers to display. Default: 50"
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "schema": {
-              "type": "integer"
-            },
-            "description": "Number of offers to skip. Default: 0"
-          },
-          {
-            "name": "min_price",
-            "in": "query",
-            "schema": {
-              "type": "number"
-            },
-            "description": "Minimum price (inclusive)"
-          },
-          {
-            "name": "max_price",
-            "in": "query",
-            "schema": {
-              "type": "number"
-            },
-            "description": "Maximum price (inclusive)"
-          },
-          {
-            "name": "query",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": "Exact query string to look for in title and descrition"
-          }
+        "security": [
+
         ],
-        "responses": {
-          "200": {
-            "description": "Offers list",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/offer"
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
                   }
                 }
               }
             }
           }
+        },
+        "parameters": [
+
+        ],
+        "responses": {
+          "201": {
+            "description": "Valid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "exp": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/user"
+                    }
+                  },
+                  "required": [
+                    "token",
+                    "exp",
+                    "user"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid email or password"
+          }
         }
-      },
+      }
+    },
+    "/api/v1/auth/refresh": {
+      "post": {
+        "summary": "refresh token",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "201": {
+            "description": "Valid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "exp": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/user"
+                    }
+                  },
+                  "required": [
+                    "token",
+                    "exp",
+                    "user"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid current token"
+          }
+        }
+      }
+    },
+    "/api/v1/offers": {
       "post": {
         "summary": "Creates an offer",
         "tags": [
@@ -124,6 +165,9 @@
         "summary": "Retrieves offer details",
         "tags": [
           "Offers"
+        ],
+        "security": [
+
         ],
         "parameters": [
           {
@@ -238,7 +282,21 @@
       "url": "http://localhost:3000"
     }
   ],
+  "security": [
+    {
+      "bearerAuth": [
+
+      ]
+    }
+  ],
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas": {
       "offer": {
         "type": "object",
@@ -266,6 +324,39 @@
                 "type": "string"
               }
             }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      },
+      "user": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "datetime"
           }
         }
       }

@@ -4,10 +4,15 @@ require 'swagger_helper'
 
 describe 'Offers API', type: :request, swagger_doc: 'v1/swagger.json' do
   TAG_NAME = 'Offers'
+  let(:user) { FactoryBot.create(:user) }
+  let(:jwt_token) do
+    JsonWebToken.encode({ user_id: user.id }, (Time.now + 3600).to_i)
+  end
 
   path '/api/v1/offers' do
     get 'List all offers' do
       tags TAG_NAME
+      security []
       consumes 'application/json'
       produces 'application/json'
 
@@ -51,6 +56,7 @@ describe 'Offers API', type: :request, swagger_doc: 'v1/swagger.json' do
         }
       }
       parameter name: :offer, in: :body
+      let(:Authorization) { 'Bearer ' + jwt_token }
 
       response '201', 'offer created' do
         let(:offer) do
@@ -71,6 +77,7 @@ describe 'Offers API', type: :request, swagger_doc: 'v1/swagger.json' do
   path '/api/v1/offers/{id}' do
     get 'Retrieves offer details' do
       tags TAG_NAME
+      security []
       consumes 'application/json'
       produces 'application/json'
       parameter name: :id, in: :path, type: :string
@@ -127,6 +134,7 @@ describe 'Offers API', type: :request, swagger_doc: 'v1/swagger.json' do
       parameter name: :id, in: :path, type: :number
 
       let(:id) { FactoryBot.create(:offer).id }
+      let(:Authorization) { 'Bearer ' + jwt_token }
       response '200', 'brand updated' do
         let(:offer) { { offer: { title: 'My new title' } } }
         run_test!
@@ -144,6 +152,7 @@ describe 'Offers API', type: :request, swagger_doc: 'v1/swagger.json' do
       produces 'application/json'
 
       parameter name: :id, in: :path, type: :number
+      let(:Authorization) { 'Bearer ' + jwt_token }
 
       response '204', 'offer deleted' do
         let(:id) { FactoryBot.create(:offer).id }

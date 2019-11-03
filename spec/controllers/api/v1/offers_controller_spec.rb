@@ -3,9 +3,15 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::OffersController, type: :controller do
+  include ApiHelper
+  let(:user) { FactoryBot.create(:user) }
   let(:valid_attributes) { FactoryBot.attributes_for(:offer) }
   let(:invalid_attributes) { FactoryBot.attributes_for(:offer, title: '') }
   let(:valid_session) { {} }
+
+  before do
+    authenticate_request! request, user
+  end
 
   describe 'GET #index' do
     it 'returns a success response' do

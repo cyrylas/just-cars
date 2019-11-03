@@ -11,6 +11,10 @@ Rails.application.routes.draw do
     # End of live: -
     namespace :v1 do
       resources :offers, only: %i[index show create update destroy]
+
+      # JWT routes
+      post 'auth' => 'auth#login'
+      post 'auth/refresh' => 'auth#refresh'
     end
   end
 
