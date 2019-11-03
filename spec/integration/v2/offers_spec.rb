@@ -39,15 +39,6 @@ describe 'Offers API', type: :request, swagger_doc: 'v2/swagger.yaml' do
 
     post 'Creates an offer' do
       tags tag_name
-      description <<~DOC
-        # There's some issues with rails 6 and rswag regarding file upload.
-        To properly test this action please use command line.
-
-        For example:
-        ```
-        curl -X POST "http://localhost:3000/api/v2/offers" -F "offer[title]=title" -F "offer[description]=my description" -F "offer[price]=123.45" -F "offer[picture]=@spec/factories/pictures/1971_Buick_Estate_wagon_rear.jpg"
-        ````
-      DOC
       produces 'application/json'
       consumes 'multipart/form-data'
       parameter name: 'Authorization', in: :header, type: :string, required: true
@@ -101,15 +92,6 @@ describe 'Offers API', type: :request, swagger_doc: 'v2/swagger.yaml' do
 
     patch 'Update offer' do
       tags tag_name
-      description <<~DOC
-        # There's some issues with rails 6 and rswag regarding file upload.
-        To properly test this action please use command line.
-
-        For example:
-        ```
-        curl -X PATCH "http://localhost:3000/api/v2/offers/:id" -F "offer[title]=title" -F "offer[description]=my description" -F "offer[price]=123.45" -F "offer[picture]=@spec/factories/pictures/1971_Buick_Estate_wagon_rear.jpg"
-        ````
-      DOC
       consumes 'multipart/form-data'
       produces 'application/json'
 
