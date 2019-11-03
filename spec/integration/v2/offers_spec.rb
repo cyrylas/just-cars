@@ -2,14 +2,14 @@
 
 require 'swagger_helper'
 
-describe 'Offers API', type: :request, swagger_doc: 'v1/swagger.json' do
+describe 'Offers API', type: :request, swagger_doc: 'v2/swagger.json' do
   TAG_NAME = 'Offers'
   let(:user) { FactoryBot.create(:user) }
   let(:jwt_token) do
     JsonWebToken.encode({ user_id: user.id }, (Time.now + 3600).to_i)
   end
 
-  path '/api/v1/offers' do
+  path '/api/v2/offers' do
     get 'List all offers' do
       tags TAG_NAME
       security []
@@ -23,7 +23,16 @@ describe 'Offers API', type: :request, swagger_doc: 'v1/swagger.json' do
       parameter name: :query, in: :query, schema: { type: :string }, description: 'Exact query string to look for in title and descrition'
 
       response '200', 'Offers list' do
-        schema(type: :array, items: { "$ref": '#/components/schemas/offer' })
+        schema(
+          type: :object,
+          properties: {
+            results: {
+              type: :array,
+              items: { "$ref": '#/components/schemas/offer' }
+            },
+            has_next_page: { type: :boolean }
+          }
+        )
       end
     end
 
@@ -35,7 +44,7 @@ describe 'Offers API', type: :request, swagger_doc: 'v1/swagger.json' do
 
         For example:
         ```
-        curl -X POST "http://localhost:3000/api/v1/offers" -F "offer[title]=title" -F "offer[description]=my description" -F "offer[price]=123.45" -F "offer[picture]=@spec/factories/pictures/1971_Buick_Estate_wagon_rear.jpg"
+        curl -X POST "http://localhost:3000/api/v2/offers" -F "offer[title]=title" -F "offer[description]=my description" -F "offer[price]=123.45" -F "offer[picture]=@spec/factories/pictures/1971_Buick_Estate_wagon_rear.jpg"
         ````
       DOC
       consumes 'application/json'
@@ -75,7 +84,7 @@ describe 'Offers API', type: :request, swagger_doc: 'v1/swagger.json' do
     end
   end
 
-  path '/api/v1/offers/{id}' do
+  path '/api/v2/offers/{id}' do
     get 'Retrieves offer details' do
       tags TAG_NAME
       security []
@@ -109,7 +118,7 @@ describe 'Offers API', type: :request, swagger_doc: 'v1/swagger.json' do
 
         For example:
         ```
-        curl -X PATCH "http://localhost:3000/api/v1/offers/:id" -F "offer[title]=title" -F "offer[description]=my description" -F "offer[price]=123.45" -F "offer[picture]=@spec/factories/pictures/1971_Buick_Estate_wagon_rear.jpg"
+        curl -X PATCH "http://localhost:3000/api/v2/offers/:id" -F "offer[title]=title" -F "offer[description]=my description" -F "offer[price]=123.45" -F "offer[picture]=@spec/factories/pictures/1971_Buick_Estate_wagon_rear.jpg"
         ````
       DOC
       consumes 'application/json'

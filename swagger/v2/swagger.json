@@ -1,0 +1,365 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API V2",
+    "version": "v2"
+  },
+  "paths": {
+    "/api/v2/auth": {
+      "post": {
+        "summary": "Get token",
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+
+        ],
+        "responses": {
+          "201": {
+            "description": "Valid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "exp": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/user"
+                    }
+                  },
+                  "required": [
+                    "token",
+                    "exp",
+                    "user"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid email or password"
+          }
+        }
+      }
+    },
+    "/api/v2/auth/refresh": {
+      "post": {
+        "summary": "refresh token",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "201": {
+            "description": "Valid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "exp": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/user"
+                    }
+                  },
+                  "required": [
+                    "token",
+                    "exp",
+                    "user"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid current token"
+          }
+        }
+      }
+    },
+    "/api/v2/offers": {
+      "post": {
+        "summary": "Creates an offer",
+        "tags": [
+          "Offers"
+        ],
+        "description": "# There's some issues with rails 6 and rswag regarding file upload.\nTo properly test this action please use command line.\n\nFor example:\n```\ncurl -X POST \"http://localhost:3000/api/v2/offers\" -F \"offer[title]=title\" -F \"offer[description]=my description\" -F \"offer[price]=123.45\" -F \"offer[picture]=@spec/factories/pictures/1971_Buick_Estate_wagon_rear.jpg\"\n````\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "name": "offer",
+                "properties": {
+                  "offer": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "price": {
+                        "type": "number"
+                      },
+                      "picture": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "title",
+                      "price"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+
+        ],
+        "responses": {
+          "201": {
+            "description": "offer created"
+          }
+        }
+      }
+    },
+    "/api/v2/offers/{id}": {
+      "get": {
+        "summary": "Retrieves offer details",
+        "tags": [
+          "Offers"
+        ],
+        "security": [
+
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Offer details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/offer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update offer",
+        "tags": [
+          "Offers"
+        ],
+        "description": "# There's some issues with rails 6 and rswag regarding file upload.\nTo properly test this action please use command line.\n\nFor example:\n```\ncurl -X PATCH \"http://localhost:3000/api/v2/offers/:id\" -F \"offer[title]=title\" -F \"offer[description]=my description\" -F \"offer[price]=123.45\" -F \"offer[picture]=@spec/factories/pictures/1971_Buick_Estate_wagon_rear.jpg\"\n````\n",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "offer": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "price": {
+                        "type": "number"
+                      },
+                      "picture": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "brand updated"
+          },
+          "422": {
+            "description": "invalid request"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete offer",
+        "tags": [
+          "Offers"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "offer deleted"
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": [
+
+      ]
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "offer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "picture": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "thumb": {
+                "type": "string"
+              },
+              "original": {
+                "type": "string"
+              }
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      },
+      "user": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}
