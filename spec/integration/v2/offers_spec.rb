@@ -13,22 +13,26 @@ describe 'Offers API', type: :request, swagger_doc: 'v2/swagger.yaml' do
     get 'List all offers' do
       tags tag_name
       security []
-      consumes 'application/json'
       produces 'application/json'
 
-      parameter name: :limit, in: :query, schema: { type: :integer }, description: 'Number of offers to display. Default: 50'
-      parameter name: :offset, in: :query, schema: { type: :integer }, description: 'Number of offers to skip. Default: 0'
-      parameter name: :min_price, in: :query, schema: { type: :number }, description: 'Minimum price (inclusive)'
-      parameter name: :max_price, in: :query, schema: { type: :number }, description: 'Maximum price (inclusive)'
-      parameter name: :query, in: :query, schema: { type: :string }, description: 'Exact query string to look for in title and descrition'
+      parameter name: :limit, in: :query, type: :integer, description: 'Number of offers to display. Default: 50'
+      parameter name: :offset, in: :query, type: :integer, description: 'Number of offers to skip. Default: 0'
+      parameter name: :min_price, in: :query, type: :number, description: 'Minimum price (inclusive)'
+      parameter name: :max_price, in: :query, type: :number, description: 'Maximum price (inclusive)'
+      parameter name: :query, in: :query, type: :string, description: 'Exact query string to look for in title and descrition'
 
       response '200', 'Offers list' do
+        let(:limit) { '10' }
+        let(:offset) { '0' }
+        let(:min_price) { nil }
+        let(:max_price) { nil }
+        let(:query) { nil }
         schema(
           type: :object,
           properties: {
             results: {
               type: :array,
-              items: { "$ref": '#/components/schemas/offer' }
+              items: { "$ref": '#/definitions/offer' }
             },
             has_next_page: { type: :boolean }
           }
@@ -73,7 +77,7 @@ describe 'Offers API', type: :request, swagger_doc: 'v2/swagger.yaml' do
       parameter name: :id, in: :path, type: :string
 
       response '200', 'Offer details' do
-        schema "$ref": '#/components/schemas/offer'
+        schema "$ref": '#/definitions/offer'
 
         let(:id) { FactoryBot.create(:offer).id }
         run_test!
@@ -116,7 +120,7 @@ describe 'Offers API', type: :request, swagger_doc: 'v2/swagger.yaml' do
       end
 
       response '422', 'invalid request' do
-        let(:offer) { { offer: { title: '' } } }
+        let(:'offer[title]') { '' }
         run_test!
       end
     end

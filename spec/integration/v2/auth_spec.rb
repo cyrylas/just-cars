@@ -30,7 +30,7 @@ describe 'Auth API', type: :request, swagger_doc: 'v2/swagger.yaml' do
             token: { type: :string },
             exp: { type: :string, format: :'date-time' },
             user: {
-              "$ref": '#/components/schemas/user'
+              "$ref": '#/definitions/user'
             }
           },
           required: %w[token exp user]
@@ -61,7 +61,7 @@ describe 'Auth API', type: :request, swagger_doc: 'v2/swagger.yaml' do
             token: { type: :string },
             exp: { type: :string, format: :'date-time' },
             user: {
-              "$ref": '#/components/schemas/user'
+              "$ref": '#/definitions/user'
             }
           },
           required: %w[token exp user]

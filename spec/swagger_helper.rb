@@ -62,10 +62,10 @@ RSpec.configure do |config|
             bearerFormat: 'JWT'
           }
         },
-        schemas: {
-          offer: scheme_offer,
-          user: scheme_user
-        }
+      },
+      definitions: {
+        offer: scheme_offer,
+        user: scheme_user
       }
     },
     'v2/swagger.yaml' => {
@@ -84,10 +84,10 @@ RSpec.configure do |config|
             bearerFormat: 'JWT'
           }
         },
-        schemas: {
-          offer: scheme_offer,
-          user: scheme_user
-        }
+      },
+      definitions: {
+        offer: scheme_offer,
+        user: scheme_user
       }
     }
   }
