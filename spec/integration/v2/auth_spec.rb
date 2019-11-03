@@ -2,7 +2,7 @@
 
 require 'swagger_helper'
 
-describe 'Auth API', type: :request, swagger_doc: 'v2/swagger.json' do
+describe 'Auth API', type: :request, swagger_doc: 'v2/swagger.yaml' do
   let(:user) { FactoryBot.create(:user) }
   let(:jwt_token) do
     JsonWebToken.encode({ user_id: user.id }, (Time.now + 3600).to_i)
@@ -14,16 +14,14 @@ describe 'Auth API', type: :request, swagger_doc: 'v2/swagger.json' do
       security []
       produces 'application/json'
       consumes 'application/json'
-
-      request_body_json schema: {
+      parameter name: :auth, in: :body, schema: {
         type: 'object',
         properties: {
           email: { type: 'string' },
           password: { type: 'string' }
-        }
+        },
+        required: %w[email password]
       }
-
-      parameter name: :auth, in: :body
 
       response '201', 'Valid credentials' do
         schema(
@@ -53,6 +51,8 @@ describe 'Auth API', type: :request, swagger_doc: 'v2/swagger.json' do
     post 'refresh token' do
       tags 'Auth'
       produces 'application/json'
+      parameter name: 'Authorization', in: :header, type: :string, required: true,
+                description: 'Enter: Bearer {token}'
 
       response '201', 'Valid credentials' do
         schema(
